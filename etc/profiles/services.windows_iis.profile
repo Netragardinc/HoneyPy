@@ -45,9 +45,9 @@ port        = tcp:30445
 description = Echo back data received via tcp.
 enabled     = Yes
 
-[CIFS.udp]
-plugin      = Echo_udp
-low_port    = udp:445
-port        = udp:30445
-description = Echo back data received via udp.
-enabled     = Yes
+#[CIFS.udp]
+#plugin      = Echo_udp
+#low_port    = udp:445
+#port        = udp:30445
+#description = Echo back data received via udp.
+#enabled     = Yes
