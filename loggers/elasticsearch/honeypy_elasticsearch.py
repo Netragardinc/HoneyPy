@@ -8,6 +8,7 @@ import hashlib
 from datetime import datetime
 import requests
 from twisted.python import log
+import base64
 
 # prevent creation of compiled bytecode files
 sys.dont_write_bytecode = True
@@ -57,8 +58,15 @@ def post(config, section, date, time, date_time, millisecond, session, protocol,
     useragent = config.get('honeypy', 'useragent')
     url = config.get(section, 'es_url')
     # post events to honeydb logger
+    dec_data = data
+    try:
+        dec_data = data.decode("hex")
+    except:
+        pass
+
+    enc_data = base64.b64encode(dec_data)
     h = hashlib.md5()
-    h.update(data)
+    h.update(enc_data)
 
     #formatting date_time as iso format so that Kibana will recognize it as a date field
     date_time = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S").isoformat()
@@ -78,7 +86,7 @@ def post(config, section, date, time, date_time, millisecond, session, protocol,
         'service': service,
         'remote_host': remote_host,
         'remote_port': remote_port,
-        'data': data,
+        'data': enc_data,
         'bytes': str(len(data)),
         'data_hash': h.hexdigest()
     }
